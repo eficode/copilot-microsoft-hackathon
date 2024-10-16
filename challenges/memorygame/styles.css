@@ -3,7 +3,9 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0;
+    background-image: url('https://example.com/pokemon-background.jpg'); /* Replace with a valid URL */
+    background-size: cover;
+    background-position: center;
     margin: 0;
     font-family: Arial, sans-serif;
 }
@@ -13,6 +15,9 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for better readability */
+    padding: 20px;
+    border-radius: 10px;
 }
 
 #reset-button {
@@ -93,7 +98,6 @@ body {
     position: absolute;
     width: 10px;
     height: 10px;
-    background-color: #ff0;
     opacity: 0;
     animation: confetti-fall 2s linear infinite;
 }

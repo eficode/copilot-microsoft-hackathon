@@ -4,8 +4,17 @@ const counterDisplay = document.getElementById('counter');
 let firstCard, secondCard;
 let lockBoard = false;
 let matches = 0;
-let guessesLeft = 20;
-let gridSize = 3; // Default grid size 3x3
+let gridSize = 4; // Default grid size 4x4
+let guessesLeft = calculateGuesses(gridSize);
+
+function calculateGuesses(size) {
+    const totalCards = size * size;
+    let guesses = Math.round(totalCards * 1.25);
+    if (guesses % 2 !== 0) {
+        guesses += 1; // Ensure guessesLeft is even
+    }
+    return guesses;
+}
 
 async function fetchPokemon() {
     const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=150');
@@ -154,7 +163,7 @@ function resetGame() {
     console.log('Reset button clicked');
     gameBoard.innerHTML = '';
     matches = 0;
-    guessesLeft = 20;
+    guessesLeft = calculateGuesses(gridSize);
     counterDisplay.textContent = `Guesses left: ${guessesLeft}`;
     lockBoard = false; // Reset lockBoard to allow playing again
     setupBoard();
@@ -165,10 +174,13 @@ function showConfetti() {
     confettiContainer.classList.add('confetti-container');
     document.body.appendChild(confettiContainer);
 
+    const colors = ['#ff0', '#f00', '#0f0', '#00f', '#f0f', '#0ff'];
+
     for (let i = 0; i < 100; i++) {
         const confetti = document.createElement('div');
         confetti.classList.add('confetti');
         confetti.style.left = `${Math.random() * 100}%`;
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
         confetti.style.animationDelay = `${Math.random() * 2}s`;
         confettiContainer.appendChild(confetti);
     }
@@ -186,8 +198,12 @@ function playWinSound() {
 document.getElementById('set-grid-size').addEventListener('click', () => {
     const newSize = parseInt(document.getElementById('grid-size').value);
     if (newSize >= 2 && newSize <= 10) {
-        gridSize = newSize;
-        resetGame();
+        if ((newSize * newSize) % 2 === 0) {
+            gridSize = newSize;
+            resetGame();
+        } else {
+            alert('Please enter a grid size that results in an even number of cards.');
+        }
     } else {
         alert('Please enter a grid size between 2 and 10.');
     }
