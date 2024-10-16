@@ -1,11 +1,11 @@
 const gameBoard = document.getElementById('game-board');
 const resetButton = document.getElementById('reset-button');
 const counterDisplay = document.getElementById('counter');
-const gridSize = 4; // 4x4 grid
 let firstCard, secondCard;
 let lockBoard = false;
 let matches = 0;
 let guessesLeft = 20;
+let gridSize = 3; // Default grid size 3x3
 
 async function fetchPokemon() {
     const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=150');
@@ -18,17 +18,22 @@ function getRandomPokemon(pokemonList, count) {
     return shuffled.slice(0, count);
 }
 
-function createCard(pokemon) {
+function createCard(content, isImage) {
     const card = document.createElement('div');
     card.classList.add('card');
-    card.dataset.pokemon = pokemon.name;
+    card.dataset.pokemon = isImage ? content.name : content;
 
     const front = document.createElement('div');
     front.classList.add('front');
-    const img = document.createElement('img');
-    img.src = pokemon.image;
-    img.alt = pokemon.name;
-    front.appendChild(img);
+
+    if (isImage) {
+        const img = document.createElement('img');
+        img.src = content.image;
+        img.alt = content.name;
+        front.appendChild(img);
+    } else {
+        front.textContent = content;
+    }
 
     const back = document.createElement('div');
     back.classList.add('back');
@@ -50,15 +55,36 @@ function shuffle(array) {
 }
 
 async function setupBoard() {
+    const totalCards = gridSize * gridSize;
+    const pokemonPairs = totalCards / 2;
     const pokemon = await fetchPokemon();
-    const randomPokemon = getRandomPokemon(pokemon, 8);
+    const randomPokemon = getRandomPokemon(pokemon, pokemonPairs);
     const pokemonWithImages = await Promise.all(randomPokemon.map(async p => {
         const response = await fetch(p.url);
         const data = await response.json();
         return { name: p.name, image: data.sprites.front_default };
     }));
-    const cards = shuffle([...pokemonWithImages, ...pokemonWithImages]).map(createCard);
-    cards.forEach(card => gameBoard.appendChild(card));
+
+    const cards = [];
+    pokemonWithImages.forEach(pokemon => {
+        cards.push(createCard(pokemon, true)); // Image card
+        cards.push(createCard(pokemon.name, false)); // Name card
+    });
+
+    shuffle(cards).forEach(card => gameBoard.appendChild(card));
+
+    // Set the grid size dynamically
+    gameBoard.style.gridTemplateColumns = `repeat(${gridSize}, 100px)`;
+    gameBoard.style.gridTemplateRows = `repeat(${gridSize}, 100px)`;
+
+    // Show all cards face up for 5 seconds
+    setTimeout(() => {
+        document.querySelectorAll('.card').forEach(card => card.classList.add('flip'));
+        setTimeout(() => {
+            document.querySelectorAll('.card').forEach(card => card.classList.remove('flip'));
+            lockBoard = false; // Unlock the board after flipping back
+        }, 5000);
+    }, 0);
 }
 
 function flipCard() {
@@ -89,8 +115,12 @@ function disableCards() {
     resetBoard();
     matches += 1;
 
-    if (matches === gridSize * gridSize / 2) {
-        setTimeout(() => alert('You win!'), 500);
+    if (matches === (gridSize * gridSize) / 2) {
+        setTimeout(() => {
+            showConfetti();
+            playWinSound();
+            alert('Congratulations! You win!');
+        }, 500);
     }
 }
 
@@ -129,6 +159,39 @@ function resetGame() {
     lockBoard = false; // Reset lockBoard to allow playing again
     setupBoard();
 }
+
+function showConfetti() {
+    const confettiContainer = document.createElement('div');
+    confettiContainer.classList.add('confetti-container');
+    document.body.appendChild(confettiContainer);
+
+    for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = `${Math.random() * 100}%`;
+        confetti.style.animationDelay = `${Math.random() * 2}s`;
+        confettiContainer.appendChild(confetti);
+    }
+
+    setTimeout(() => {
+        confettiContainer.remove();
+    }, 5000);
+}
+
+function playWinSound() {
+    const audio = new Audio('win-sound.mp3');
+    audio.play();
+}
+
+document.getElementById('set-grid-size').addEventListener('click', () => {
+    const newSize = parseInt(document.getElementById('grid-size').value);
+    if (newSize >= 2 && newSize <= 10) {
+        gridSize = newSize;
+        resetGame();
+    } else {
+        alert('Please enter a grid size between 2 and 10.');
+    }
+});
 
 resetButton.addEventListener('click', resetGame);
 

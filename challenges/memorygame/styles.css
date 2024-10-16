@@ -32,11 +32,6 @@ body {
     gap: 10px;
 }
 
-.grid-4x4 {
-    grid-template-columns: repeat(4, 100px);
-    grid-template-rows: repeat(4, 100px);
-}
-
 .card {
     width: 100px;
     height: 100px;
@@ -68,6 +63,10 @@ body {
     justify-content: center;
     align-items: center;
     transform: rotateY(180deg); /* Hide the front side by default */
+    font-size: 16px; /* Ensure text is visible */
+    color: #000; /* Ensure text color is black */
+    text-align: center; /* Center the text */
+    padding: 10px; /* Add padding for better readability */
 }
 
 .card .front img {
@@ -77,4 +76,35 @@ body {
 
 .card .back {
     background-color: #007bff;
+}
+
+.confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #ff0;
+    opacity: 0;
+    animation: confetti-fall 2s linear infinite;
+}
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
 }
