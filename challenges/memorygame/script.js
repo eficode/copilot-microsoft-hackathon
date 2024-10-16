@@ -47,6 +47,11 @@ function createCard(content, isImage) {
     const back = document.createElement('div');
     back.classList.add('back');
 
+    // Set a random background color for the back of the card
+    const colors = ['#ff0', '#f00', '#0f0', '#00f', '#f0f', '#0ff'];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    back.style.backgroundColor = randomColor;
+
     card.appendChild(front);
     card.appendChild(back);
 
@@ -85,15 +90,6 @@ async function setupBoard() {
     // Set the grid size dynamically
     gameBoard.style.gridTemplateColumns = `repeat(${gridSize}, 100px)`;
     gameBoard.style.gridTemplateRows = `repeat(${gridSize}, 100px)`;
-
-    // Show all cards face up for 5 seconds
-    setTimeout(() => {
-        document.querySelectorAll('.card').forEach(card => card.classList.add('flip'));
-        setTimeout(() => {
-            document.querySelectorAll('.card').forEach(card => card.classList.remove('flip'));
-            lockBoard = false; // Unlock the board after flipping back
-        }, 5000);
-    }, 0);
 }
 
 function flipCard() {

@@ -3,7 +3,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-image: url('https://example.com/pokemon-background.jpg'); /* Replace with a valid URL */
+    background-image: url('./background.jpeg'); /* Replace with a valid URL */
     background-size: cover;
     background-position: center;
     margin: 0;
@@ -80,35 +80,11 @@ body {
 }
 
 .card .back {
-    background-color: #007bff;
-}
-
-.confetti-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 9999;
-}
-
-.confetti {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    opacity: 0;
-    animation: confetti-fall 2s linear infinite;
-}
-
-@keyframes confetti-fall {
-    0% {
-        transform: translateY(-100vh) rotate(0deg);
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(100vh) rotate(360deg);
-        opacity: 0;
-    }
+    background-image: url('pokemon-1635610_1280.png'); /* Replace with the actual path to the image */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-blend-mode: multiply; /* Blend the background image with the background color */
 }
