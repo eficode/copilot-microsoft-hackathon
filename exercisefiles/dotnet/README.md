@@ -131,7 +131,7 @@ Inside `MinimalAPI\Program.cs` add the following endpoints using the help of Cop
     * if DNI is valid return "valid"
     * if DNI is not valid return "invalid"
 
-> **_NOTE:_** Use above information inside a comment in the `Program.cs` file. In this case, you may want to see multiple solutions from Copilot to pick the one that best fits the way to calculate the letter. In order to see the firs 10 suggestions from Copilot press `ctrl + enter`. 
+> **_NOTE:_** Use above information inside a comment in the `Program.cs` file. In this case, you may want to see multiple solutions from Copilot to pick the one that best fits the way to calculate the letter. In order to see the first 10 suggestions from Copilot press `ctrl + enter`. Note: multiple suggestions available in VS Code only!
 
 - **/returncolorcode**:
 
